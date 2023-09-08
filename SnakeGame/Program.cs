@@ -26,10 +26,10 @@ void IniciarJogo()
         TransladarCobra();
         Renderizar();
     }
-    Endgame();
+    EndGame();
 }
 
-void Endgame()
+void EndGame()
 {
     Console.Clear();
     Console.WriteLine("End Game, Pontuação: " + placar);
@@ -103,7 +103,7 @@ void TransladarCobra()
     if (tela[cabeca.X, cabeca.Y]== "*")
     {
         placar += random.Next(1, 10);
-        coordenadasCobra.Add(new Coordenada(coordenadaRaboY, coordenadaRaboX));
+        coordenadasCobra.Add(new Coordenada(coordenadaRaboX, coordenadaRaboY));
         CriarComida();
     }
     if (tela[cabeca.X, cabeca.Y]== caractereCobra)
@@ -127,29 +127,25 @@ void LerAcaoDaTecla()
     {
         var tecla = Console.ReadKey();
 
-        if (tecla.Key is ConsoleKey.UpArrow && direcao is not Direcao.Baixo)
+        if (tecla.Key == ConsoleKey.UpArrow && direcao != Direcao.Baixo)
         {
             direcao = Direcao.Cima;
-
         }
-        if (tecla.Key is ConsoleKey.DownArrow && direcao is not Direcao.Cima)
+        else if (tecla.Key == ConsoleKey.DownArrow && direcao != Direcao.Cima)
         {
-            direcao = Direcao.Cima;
-
+            direcao = Direcao.Baixo;
         }
-        if (tecla.Key is ConsoleKey.RightArrow && direcao is not Direcao.Esquerda)
+        else if (tecla.Key == ConsoleKey.RightArrow && direcao != Direcao.Esquerda)
         {
             direcao = Direcao.Direita;
-
         }
-        if (tecla.Key is ConsoleKey.LeftArrow && direcao is not Direcao.Direita)
+        else if (tecla.Key == ConsoleKey.LeftArrow && direcao != Direcao.Direita)
         {
             direcao = Direcao.Esquerda;
-
         }
     }
-       
 }
+
 
 void CriarComida()
 {
@@ -158,8 +154,11 @@ void CriarComida()
     {
         aleatorioX = random.Next(0, larguraTela);
         aleatorioY = random.Next(0, alturaTela);
-    } while (tela[aleatorioX, aleatorioY] is not null or " ");
+    } while (tela[aleatorioX, aleatorioY] != null);
+
+    tela[aleatorioX, aleatorioY] = "*";
 }
+
 
 void CriarCobra()
 {
