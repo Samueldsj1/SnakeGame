@@ -1,8 +1,8 @@
-﻿using System.ComponentModel.Design;
+﻿
 using SnakeGame;
 
-const int larguraTela = 70;
-const int alturaTela = 40;
+const int larguraTela = 29;
+const int alturaTela = 15;
 const string caractereCobra = "■";
 
 string[,] tela = new string[larguraTela, alturaTela];
@@ -11,19 +11,19 @@ List<Coordenada> coordenadasCobra = new();
 Direcao direcao = Direcao.Direita;
 int placar = 0;
 Random random = new();
+StartGame();
 
-IniciarJogo();
-
-void IniciarJogo()
+void StartGame()
 {
     CriarCobra();
     CriarComida();
     LerTeclas();
-
+    Console.WriteLine(" Pontuação: " + placar);
     while (jogoRodando)
     {
+       
         Thread.Sleep(50);
-        TransladarCobra();
+        MovimentarCobra();
         Renderizar();
     }
     EndGame();
@@ -39,25 +39,29 @@ void Renderizar()
 {
     Console.Clear();
     var telaASerRenderizada = "";
+
     for (int a = 0; a < alturaTela; a++)
     {
         for (int l = 0; l < larguraTela; l++)
         {
-            if (tela[l, a] is not null or "")
+            if (tela[l, a] is not null or " ")
             {
                 telaASerRenderizada += tela[l, a];
             }
             else
             {
-                telaASerRenderizada += "";
+                telaASerRenderizada += " ";
             }
         }
+
         telaASerRenderizada += "\n";
     }
+
     Console.Write(telaASerRenderizada);
 }
 
-void TransladarCobra()
+
+void MovimentarCobra()
 {
     var cabeca = coordenadasCobra[0];
     var coordenadaRaboX = coordenadasCobra[^1].X;
@@ -70,8 +74,8 @@ void TransladarCobra()
     }
     if(direcao is Direcao.Direita)
     {
-        cabeca.X++;
-        if(cabeca.X > larguraTela)
+        cabeca.X += 1;
+        if(cabeca.X > larguraTela -1)
         {
             cabeca.X = 0;
         }
@@ -100,9 +104,9 @@ void TransladarCobra()
             cabeca.Y = 0;
         }
     }
-    if (tela[cabeca.X, cabeca.Y]== "*")
+    if (tela[cabeca.X, cabeca.Y] == "*")
     {
-        placar += random.Next(1, 10);
+        placar++;
         coordenadasCobra.Add(new Coordenada(coordenadaRaboX, coordenadaRaboY));
         CriarComida();
     }
@@ -154,7 +158,7 @@ void CriarComida()
     {
         aleatorioX = random.Next(0, larguraTela);
         aleatorioY = random.Next(0, alturaTela);
-    } while (tela[aleatorioX, aleatorioY] != null);
+    } while (tela[aleatorioX, aleatorioY] is not null or " ");
 
     tela[aleatorioX, aleatorioY] = "*";
 }
